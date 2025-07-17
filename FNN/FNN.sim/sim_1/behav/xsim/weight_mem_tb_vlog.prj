@@ -1,0 +1,11 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib "C:/Users/louja/Desktop/Own Projects/FPGAs/FNN/source/defines.v" --include "../../../../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef" \
+"../../../../source/defines.v" \
+"../../../../source/neuron/weight_mem.v" \
+"../../../../tests/weight_mem_tb.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

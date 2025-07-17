@@ -1,0 +1,7 @@
+*
+!*.v
+!*.mif
+!*/
+.vscode/
+*.log
+*.tmp
