@@ -1,8 +1,0 @@
-0.7
-2020.2
-May 22 2025
-00:13:55
-C:/Users/louja/Desktop/Own Projects/FPGAs/FNN/FNN.sim/sim_1/behav/xsim/glbl.v,1741209010,verilog,,,,glbl,,,,,,,,
-C:/Users/louja/Desktop/Own Projects/FPGAs/FNN/source/defines.v,1752793823,verilog,,C:/Users/louja/Desktop/Own Projects/FPGAs/FNN/source/defines.v;C:/Users/louja/Desktop/Own Projects/FPGAs/FNN/source/neuron/weight_mem.v,,,,,../../../../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
-C:/Users/louja/Desktop/Own Projects/FPGAs/FNN/source/neuron/weight_mem.v,1752793999,verilog,,C:/Users/louja/Desktop/Own Projects/FPGAs/FNN/tests/weight_mem_tb.v,,weight_mem,,,../../../../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
-C:/Users/louja/Desktop/Own Projects/FPGAs/FNN/tests/weight_mem_tb.v,1752792397,verilog,,,,weight_mem_tb,,,../../../../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,

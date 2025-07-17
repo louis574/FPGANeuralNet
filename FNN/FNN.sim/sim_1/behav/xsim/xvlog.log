@@ -1,4 +1,0 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/louja/Desktop/Own Projects/FPGAs/FNN/source/defines.v" into library xil_defaultlib
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/louja/Desktop/Own Projects/FPGAs/FNN/source/defines.v" into library xil_defaultlib
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/louja/Desktop/Own Projects/FPGAs/FNN/source/neuron/weight_mem.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module weight_mem
