@@ -53,6 +53,8 @@ module weight_mem_tb;
         r_en = 0;
         r_add = 2'b0;
         #10;
+        r_en = 1;
+        #10;
         $finish;
     end
     
