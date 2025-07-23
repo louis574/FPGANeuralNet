@@ -211,8 +211,8 @@ for n in range(10):
             x.update_params(alpha = 0.01, sum=update)
     #print("----------------------- R -----------------------")
     sum = 0
-    for i in range(60000):
-        if(x.train_data_y[i] == x.inference(X=x.train_data_x[:,i:i+1])):
+    for i in range(10000):
+        if(x.test_data_y[i] == x.inference(X=x.test_data_x[:,i:i+1])):
             sum += 1
     print(sum, "out of 10000 correct")
 
@@ -222,7 +222,7 @@ for n in range(10):
 print("---------------------- individual testing -----------------------")
 
 for i in range(20):
-    test_case = random.randint(0, 60000)
-    print("Example", i+1, "inference:", x.inference(X=x.train_data_x[:,test_case:test_case+1]), "true value:", x.train_data_y[test_case])
+    test_case = random.randint(0, 10000)
+    print("Example", i+1, "inference:", x.inference(X=x.test_data_x[:,test_case:test_case+1]), "true value:", x.test_data_y[test_case])
 
 
