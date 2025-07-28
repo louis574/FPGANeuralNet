@@ -34,7 +34,7 @@ module weight_mem_tb;
     
     weight_mem #(.weight_file(`w_file), .address_width(address_width))
     test
-    (.clk(clk), .r_en(r_en), .r_add(r_add), .w_out(w_out));
+    ( .r_en(r_en), .r_add(r_add), .w_out(w_out));
     
     initial begin
         forever #5 clk = ~clk;
@@ -42,15 +42,13 @@ module weight_mem_tb;
     
     initial begin
         r_en = 1;
-        #1;
-        #10;
+        #14;
         r_add = 2'b00;
         #10;
         r_add = 2'b01;
         #10;
         r_add = 2'b10;
         #10;
-        r_en = 0;
         r_add = 2'b0;
         #10;
         r_en = 1;

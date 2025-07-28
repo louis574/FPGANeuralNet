@@ -1,0 +1,26 @@
+WIDTH=16;
+DEPTH=20;
+ADDRESS_RADIX=UNS;
+DATA_RADIX=HEX;
+CONTENT BEGIN
+	0 : FF59;
+	1 : 05DA;
+	2 : FC34;
+	3 : 007D;
+	4 : F619;
+	5 : 00D1;
+	6 : FBDE;
+	7 : 046D;
+	8 : FD03;
+	9 : FAC6;
+	10 : 000D;
+	11 : FCF8;
+	12 : 04BC;
+	13 : 0B95;
+	14 : FEAF;
+	15 : FA0E;
+	16 : 081D;
+	17 : FF9D;
+	18 : FE9C;
+	19 : 0035;
+END;

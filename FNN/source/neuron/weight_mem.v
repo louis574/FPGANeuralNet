@@ -27,8 +27,6 @@ module weight_mem #(parameter num_weight = 3, neuron_no=5, //parameters
     //inputs-outputs
     //dual port can read and write at same time
     (
-    input clk,
-    input r_en,
     input [address_width-1:0] r_add,
     output reg [data_width-1:0] w_out
     );
@@ -36,13 +34,11 @@ module weight_mem #(parameter num_weight = 3, neuron_no=5, //parameters
     reg [data_width-1:0] w_mem [num_weight-1:0];
     
     initial begin
-        $readmemb(weight_file, w_mem);
+        $readmemh(weight_file, w_mem);
     end
      
-     always @(posedge clk) begin
-        if(r_en) begin
-            w_out <= w_mem[r_add];
-        end
+     always @(*) begin
+        w_out = w_mem[r_add];
      end
     
 endmodule

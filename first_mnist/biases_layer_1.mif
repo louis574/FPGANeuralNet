@@ -1,0 +1,26 @@
+WIDTH=16;
+DEPTH=20;
+ADDRESS_RADIX=UNS;
+DATA_RADIX=HEX;
+CONTENT BEGIN
+	0 : 02F6;
+	1 : FBB2;
+	2 : FF26;
+	3 : 0391;
+	4 : 006D;
+	5 : FA8B;
+	6 : FE86;
+	7 : 0313;
+	8 : FF89;
+	9 : FCD0;
+	10 : FDDC;
+	11 : FE95;
+	12 : 010D;
+	13 : 0122;
+	14 : 01BF;
+	15 : FC1F;
+	16 : 0053;
+	17 : 0119;
+	18 : 00E8;
+	19 : FEAE;
+END;
