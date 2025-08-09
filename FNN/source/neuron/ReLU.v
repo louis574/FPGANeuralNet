@@ -30,11 +30,11 @@ module ReLU #(parameter data_width = 16)(
             out = {data_width{1'b0}};
         end
         else begin
-            if (!in[data_width*2-2:data_width]) begin
+            if (!in[data_width*2-2:data_width-1]) begin //also includes msb of 16 bit as if you do 4000 + 4000 youll get 8000 which would be output as 8000 as the signed bit is not extended so we need to check this final bit aswell to test overflow
                 out = in[data_width-1:0];
             end
             else begin
-                out = {data_width{1'b1}};
+                out = {1'b0,{(data_width-1){1'b1}}};
             end
             
         end

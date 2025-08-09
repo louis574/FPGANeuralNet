@@ -19,7 +19,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module weight_mem_tb;
 
     //change params:
@@ -32,7 +31,7 @@ module weight_mem_tb;
     reg [address_width-1:0] r_add = 0;
     wire [data_width-1:0] w_out;
     
-    weight_mem #(.weight_file(`w_file), .address_width(address_width))
+    weight_mem #(.weight_file(""), .address_width(address_width))
     test
     ( .r_en(r_en), .r_add(r_add), .w_out(w_out));
     
