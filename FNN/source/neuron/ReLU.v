@@ -20,17 +20,17 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ReLU #(parameter data_width = 16)(
-    input [data_width*2-1:0] in,
+module ReLU #(parameter data_width = 16, frac_bits = 11)(
+    input [2*data_width-frac_bits-1:0] in,
     output reg [data_width-1:0] out
     );
     
     always @(*) begin
-        if (in[data_width*2-1] == 1) begin
+        if (in[2*data_width-frac_bits-1] == 1) begin
             out = {data_width{1'b0}};
         end
         else begin
-            if (!in[data_width*2-2:data_width-1]) begin //also includes msb of 16 bit as if you do 4000 + 4000 youll get 8000 which would be output as 8000 as the signed bit is not extended so we need to check this final bit aswell to test overflow
+            if (!in[data_width*2-2-frac_bits:data_width-1]) begin //also includes msb of 16 bit as if you do 4000 + 4000 youll get 8000 which would be output as 8000 as the signed bit is not extended so we need to check this final bit aswell to test overflow
                 out = in[data_width-1:0];
             end
             else begin
