@@ -51,7 +51,7 @@ module neural_net_tb;
 
 
     initial begin
-        $readmemb("Batch_0_vals.mif", in_x);
+        $readmemb("Batch_19_vals.mif", in_x);
     end
    
     neural_net #( .number_of_layers(no_of_layers), .array(layer_array), .dataWidth(dWidth), .frac_bits(11)) test
