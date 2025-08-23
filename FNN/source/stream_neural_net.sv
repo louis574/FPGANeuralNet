@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 30.07.2025 17:35:40
+// Create Date: 22.08.2025 18:41:53
 // Design Name: 
-// Module Name: neural_net
+// Module Name: stream_neural_net
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,12 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module neural_net #(parameter number_of_layers = 3, int array [0:number_of_layers-1] = '{4,4,4}, dataWidth = 16, largest_width = 4, frac_bits = 11)
+module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_of_layers-1] = '{4,4,4}, dataWidth = 16, largest_width = 4, frac_bits = 11)
 (
     input [dataWidth-1:0] in,
     
     input clk,
-    input first,
+    input VSYNC,
+    input HSYNC,
     output reg [3:0] result,
     output d_outs [number_of_layers-2:0],
     output [dataWidth-1:0] feed_buses [number_of_layers - 2:0],
@@ -42,6 +43,8 @@ module neural_net #(parameter number_of_layers = 3, int array [0:number_of_layer
     wire freeze [number_of_layers-2:0];
     wire [dataWidth-1:0] feeder_buses [number_of_layers - 2:0];
     wire [2*dataWidth*array[number_of_layers-1]-1:0] unquantized_out;
+    wire pause;
+    wire [dataWidth*array[1]-1:0] stream_layer;
     
     
     assign feed_buses = feeder_buses;
@@ -51,22 +54,45 @@ module neural_net #(parameter number_of_layers = 3, int array [0:number_of_layer
             
             
     generate
-        for(x = 0; x < number_of_layers-1; x = x+1) begin : out_bus_layer
+        for(x = 0; x < number_of_layers-2; x = x+1) begin : out_bus_layer
             wire [dataWidth*array[x]-1:0] out_bus;
         end
     endgenerate
     
+    
     generate
         for( i = 0; i < number_of_layers-1; i = i + 1) begin : layers
             if(i == 0) begin
-                first_layer #(.weightNo(array[i]), .dataWidth(dataWidth)) fl
-                 (.clk(clk), .done_in(done_outs[1]), .first(first), .in(in), .out(out_bus_layer[i].out_bus), .f_layer(f_layer)
-                 );
-                 
-                 
+                pixel_stream_block stream 
+                (
+                .HSYNC(HSYNC), .VSYNC(VSYNC), .clk(clk), .data_in(in),
+                .done_out(done_outs[i]), .freeze_r(freeze[i]), .pause_r(pause),
+                .data_out(feeder_buses[i]) //add remaining block then add stream layer in correctly
+                );  
+            end
+            else if(i==1) begin
+                stream_layer #(.layerNo(i-1), .numWeight(array[i-1]), .neuron_number(array[i]), .dataWidth(dataWidth), .frac_bits(frac_bits)) layer
+                (
+                .clk(clk), 
+                .freeze(freeze[i-1]),
+                .pause(pause),
+                 .myinput(feeder_buses[i-1]), 
+                 .out(stream_layer), 
+                 //.mul_out(mul_out[i-1]),
+                 .sum_out(sum_out[i-1]), 
+                 .weight_out(weight_out[i-1])
+                );
+                
+                store_stream_layer #(.dataWidth(dataWidth), .neuron_no(array[1])) store (                    
+                .clk(clk),
+                .done(done_outs[i-1]),
+                .in(stream_layer),
+                .out(out_bus_layer[i-1].out_bus)                
+                );
+                
                 async_sel_block #( .weight_n(array[i]), .data_width(dataWidth)) sel 
                 (
-                .done_in(done_outs[1]|first), .clk(clk), .data_in(out_bus_layer[i].out_bus),
+                .done_in(done_outs[i-1]), .clk(clk), .data_in(out_bus_layer[i-1].out_bus),
                 .done_out(done_outs[i]), .freeze_r(freeze[i]),
                 .data_out(feeder_buses[i])        
                 );
@@ -78,7 +104,7 @@ module neural_net #(parameter number_of_layers = 3, int array [0:number_of_layer
                 .clk(clk), 
                 .freeze(freeze[i-1]),
                  .myinput(feeder_buses[i-1]), 
-                 .out(out_bus_layer[i].out_bus), 
+                 .out(out_bus_layer[i-1].out_bus), 
                  //.mul_out(mul_out[i-1]),
                  .sum_out(sum_out[i-1]), 
                  .weight_out(weight_out[i-1])
@@ -87,7 +113,7 @@ module neural_net #(parameter number_of_layers = 3, int array [0:number_of_layer
 
                 async_sel_block #( .weight_n(array[i]), .data_width(dataWidth)) sel 
                 (
-                .done_in(done_outs[i-1]), .clk(clk), .data_in(out_bus_layer[i].out_bus),
+                .done_in(done_outs[i-1]), .clk(clk), .data_in(out_bus_layer[i-1].out_bus),
                 .done_out(done_outs[i]), .freeze_r(freeze[i]),
                 .data_out(feeder_buses[i])        
                 );
