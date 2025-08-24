@@ -32,18 +32,21 @@ module first_layer #(parameter weightNo = 784, dataWidth = 16)(
     
     assign f_layer = out;
     reg standby;
+    reg done_in_d;
     
     initial begin
         standby = 1;
     end
     
     always @(posedge clk) begin
+    
+        done_in_d <= done_in;
         if((done_in | first) & standby) begin
             standby <= 0;
             out <= in;    
         end
         
-        if(~done_in) begin
+        if(done_in_d & ~done_in) begin
             standby <= 1;
         end
         

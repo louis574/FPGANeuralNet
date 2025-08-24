@@ -53,6 +53,7 @@ module first_neuron #(parameter layerNo=0,neuronNo=0,numWeight=784,dataWidth=16,
     wire [dataWidth-1:0] w_out;
     
     reg state = 0; //0 = frozen, 1 = unfrozen 
+    reg pause_state = 0;
     
 
     assign sum_out = sum;
@@ -98,21 +99,12 @@ module first_neuron #(parameter layerNo=0,neuronNo=0,numWeight=784,dataWidth=16,
             if(state & freeze) begin
                 state <= 0;
             end
-            else if (~state & ~freeze) begin
+            else if (~state & ~freeze & ~pause) begin
                 sum <= mul;
                 state<=1;
                 //TAKE THIS OUT IF STOPS WORKIN
                 r_addr <= r_addr+1;
-            end 
-            else if (pause) begin
-                state <= 0;
-            end
-            else if (~state & ~pause) begin
-                sum <= comboAdd;
-                state<=1;
-                //TAKE THIS OUT IF STOPS WORKIN
-                r_addr <= r_addr+1;
-            end          
+            end     
             else if (state) begin          
 
                 if(!mul[2*dataWidth-1] & !sum[2*dataWidth-1] & comboAdd[2*dataWidth-1]) begin

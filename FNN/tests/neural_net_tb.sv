@@ -77,7 +77,7 @@ module neural_net_tb;
     initial begin
         index = 0;
         first_val=1;
-        #10;
+        #20;
         first_val=0;
         #8020;
         index=1;

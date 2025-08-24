@@ -26,7 +26,7 @@ module stream_neural_net_tb;
     localparam dWidth = 16;
     
     //reg [12543:0] in_x [0:0]; //[0:0];
-    reg [layer_array[0]*dWidth-1:0] in_x [4:0];
+    reg [layer_array[0]*dWidth-1:0] in_x [9:0];
     reg clk;
     reg VSYNC;
     reg HSYNC;
@@ -74,28 +74,32 @@ module stream_neural_net_tb;
         forever #5 clk = ~clk;
     end
     
-    initial begin
-        example = 0;
-        VSYNC=1;
-        #50;
-
+    initial begin        
         
-        for (int l = 0; l < 18; l = l+1) begin
-            HSYNC = 1;
-            for(int x = 0; x < 18; x= x+1) begin
-                i = x+l*18;
-                #10;
+            example = 5;
+            VSYNC=1;
+            #50;
+    
+            
+            for (int l = 0; l < 18; l = l+1) begin
+                HSYNC = 1;
+                for(int x = 0; x < 18; x= x+1) begin
+                    i = x+l*18;
+                    #10;
+                end
+                //
+                //HSYNC=0;
+                //#40;
             end
-            //HSYNC=0;
-            //#20;
-        end
-        VSYNC=0;
-
-        #50;
+            VSYNC=0;
+            #30;
         
 
         
-        $stop;
+        
+        
+        
+
     end
 
 endmodule

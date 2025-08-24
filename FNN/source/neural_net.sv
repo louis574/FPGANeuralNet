@@ -22,7 +22,7 @@
 
 module neural_net #(parameter number_of_layers = 3, int array [0:number_of_layers-1] = '{4,4,4}, dataWidth = 16, largest_width = 4, frac_bits = 11)
 (
-    input [dataWidth-1:0] in,
+    input [array[0]*dataWidth-1:0] in,
     
     input clk,
     input first,
