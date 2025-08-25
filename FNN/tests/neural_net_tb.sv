@@ -23,8 +23,8 @@
 module neural_net_tb;
 
 
-    localparam no_of_layers = 3; 
-    localparam int layer_array [0:no_of_layers-1] = '{784,20,10};
+    localparam no_of_layers = 4; 
+    localparam int layer_array [0:no_of_layers-1] = '{784,20,10,10};
     localparam dWidth = 16;
     
     //reg [12543:0] in_x [0:0]; //[0:0];
@@ -39,11 +39,12 @@ module neural_net_tb;
     wire [2*dWidth-1:0] sum_out [no_of_layers-2:0][19:0];
     wire [dWidth-1:0] weight_out [no_of_layers-2:0][19:0];
     wire freeze_out [no_of_layers-2:0];
-    wire [layer_array[0]*dWidth-1:0] in; 
+    reg [layer_array[0]*dWidth-1:0] in; 
     wire [layer_array[0]*dWidth-1:0] f; 
     
-    
-    assign in = in_x[index];
+    always @(*) begin
+        in = in_x[index];
+    end
     
 
 
@@ -51,7 +52,7 @@ module neural_net_tb;
 
 
     initial begin
-        $readmemb("Batch_19_vals.mif", in_x);
+        $readmemb("Batch_9_vals.mif", in_x);
     end
    
     neural_net #( .number_of_layers(no_of_layers), .array(layer_array), .dataWidth(dWidth), .frac_bits(11)) test
@@ -77,27 +78,15 @@ module neural_net_tb;
     initial begin
         index = 0;
         first_val=1;
-        #20;
+        #10;
         first_val=0;
-        #8020;
-        index=1;
-        #8020;
-        index=2;
-        #8020;
-        index=3;
-        #8020;
-        index=4;
-        #8020;
-        index=5;
-        #8020;
-        index=6;
-        #8020;
-        index=7;
-        #8020;
-        index=8;
-        #8020;
-        index=9;
+        #7500;
+        for(int i = 1; i < 10; i = i+1) begin
+            index = i;
+            #8000;
+        end
         #10000;
+
         $stop;
     end
 

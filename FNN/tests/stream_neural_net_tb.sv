@@ -21,8 +21,8 @@
 
 
 module stream_neural_net_tb;
-    localparam no_of_layers = 3; 
-    localparam int layer_array [0:no_of_layers-1] = '{784,20,10};
+    localparam no_of_layers = 4; 
+    localparam int layer_array [0:no_of_layers-1] = '{784,20,10,10};
     localparam dWidth = 16;
     
     //reg [12543:0] in_x [0:0]; //[0:0];
@@ -52,7 +52,7 @@ module stream_neural_net_tb;
 
 
     initial begin
-        $readmemb("Batch_0_vals.mif", in_x);
+        $readmemb("Batch_4_vals.mif", in_x);
     end
    
     stream_neural_net #( .number_of_layers(no_of_layers), .array(layer_array), .dataWidth(dWidth), .frac_bits(11)) test
