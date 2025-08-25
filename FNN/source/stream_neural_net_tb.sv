@@ -40,6 +40,7 @@ module stream_neural_net_tb;
     wire [dWidth-1:0] weight_out [no_of_layers-2:0][19:0];
     wire freeze_out [no_of_layers-2:0];
     wire [dWidth-1:0] in; 
+    wire [layer_array[1]*dWidth-1:0] stream_layer_store;
     
     
     assign in = in_x[example][i*dWidth+:dWidth]; //this is how you clip with parameters
@@ -51,12 +52,13 @@ module stream_neural_net_tb;
 
 
     initial begin
-        $readmemb("Batch_0_vals.mif", in_x);
+        $readmemb("Batch_19_vals.mif", in_x);
     end
    
     stream_neural_net #( .number_of_layers(no_of_layers), .array(layer_array), .dataWidth(dWidth), .frac_bits(11)) test
     (
     .in(in),
+    .stream_layer_store(stream_layer_store),
     .clk(clk),
     .HSYNC(HSYNC),
     .VSYNC(VSYNC),
@@ -75,24 +77,28 @@ module stream_neural_net_tb;
     end
     
     initial begin        
-        
-            example = 5;
-            VSYNC=1;
-            #50;
-    
+
+
             
-            for (int l = 0; l < 18; l = l+1) begin
-                HSYNC = 1;
-                for(int x = 0; x < 18; x= x+1) begin
-                    i = x+l*18;
-                    #10;
+            for (int e = 0; e < 10; e=e+1) begin
+            VSYNC=1;
+            #50;  
+            example = e;  
+            
+                for (int l = 0; l < 28; l = l+1) begin
+                    HSYNC = 1;
+                    for(int x = 0; x < 28; x= x+1) begin
+                        i = x+l*28;
+                        #10;
+                    end
+                    //
+                    HSYNC=0;
+                    #40;
                 end
-                //
-                //HSYNC=0;
-                //#40;
+                VSYNC=0;
+                #30;
+            
             end
-            VSYNC=0;
-            #30;
         
 
         

@@ -92,12 +92,9 @@ module first_neuron #(parameter layerNo=0,neuronNo=0,numWeight=784,dataWidth=16,
     
     always @(posedge clk) //clocked because otherwise would infer latches etc
     begin
-        
-            if(freeze) begin
-                r_addr <= {addressWidth{1'b0}};
-            end
             if(state & freeze) begin
                 state <= 0;
+                r_addr <= {addressWidth{1'b0}};
             end
             else if (~state & ~freeze & ~pause) begin
                 sum <= mul;
@@ -105,7 +102,7 @@ module first_neuron #(parameter layerNo=0,neuronNo=0,numWeight=784,dataWidth=16,
                 //TAKE THIS OUT IF STOPS WORKIN
                 r_addr <= r_addr+1;
             end     
-            else if (state) begin          
+            else if (state & ~pause) begin          
 
                 if(!mul[2*dataWidth-1] & !sum[2*dataWidth-1] & comboAdd[2*dataWidth-1]) begin
                     sum <={1'b0,{(2*dataWidth-1){1'b1}}};

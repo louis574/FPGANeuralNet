@@ -34,7 +34,8 @@ module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_o
     output [2*dataWidth-1:0] sum_out [number_of_layers-2:0][19:0],
     output [dataWidth-1:0] weight_out [number_of_layers-2:0][19:0],
     output freeze_out [number_of_layers-2:0],
-    output [array[0]*dataWidth-1:0] f_layer
+    output [array[0]*dataWidth-1:0] f_layer,
+    output [array[1]*dataWidth-1:0] stream_layer_store
     );
     
     genvar i;
@@ -45,17 +46,19 @@ module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_o
     wire [2*dataWidth*array[number_of_layers-1]-1:0] unquantized_out;
     wire pause;
     wire [dataWidth*array[1]-1:0] stream_layer;
+
     
     
     assign feed_buses = feeder_buses;
     assign freeze_out = freeze;
     assign d_outs = done_outs;
+    assign stream_layer_store = out_bus_layer[0].out_bus;
             //generate arrays with different widths
             
             
     generate
         for(x = 0; x < number_of_layers-2; x = x+1) begin : out_bus_layer
-            wire [dataWidth*array[x]-1:0] out_bus;
+            wire [dataWidth*array[x+1]-1:0] out_bus;
         end
     endgenerate
     
