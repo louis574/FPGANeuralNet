@@ -24,9 +24,7 @@ module final_neuron_layer #(parameter layerNo = 0, numWeight = 784,neuron_number
     input           clk,
     input           freeze,
     input [dataWidth-1:0]    myinput,
-    output wire [2*neuron_number*dataWidth-1:0]    out,
-    output wire [2*dataWidth-1:0] sum_out [19:0],
-    output wire [dataWidth-1:0] weight_out [19:0] 
+    output wire [2*neuron_number*dataWidth-1:0]    out
 );
 
     genvar i;
@@ -35,7 +33,7 @@ module final_neuron_layer #(parameter layerNo = 0, numWeight = 784,neuron_number
         for(i = 0; i < neuron_number; i = i + 1) begin : neurons
             neuron_no_ReLU #(.layerNo(layerNo), .neuronNo(i), .dataWidth(dataWidth), .numWeight(numWeight)) n 
             (
-            .clk(clk), .freeze(freeze), .myinput(myinput), .out_n(out[dataWidth*2*i + 2*dataWidth - 1 : 2*dataWidth*i]), .sum_out(sum_out[i]), .weight_out(weight_out[i])
+            .clk(clk), .freeze(freeze), .myinput(myinput), .out_n(out[dataWidth*2*i + 2*dataWidth - 1 : 2*dataWidth*i]) //, .sum_out(sum_out[i]), .weight_out(weight_out[i])
             );
         end    
     endgenerate

@@ -20,22 +20,22 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_of_layers-1] = '{4,4,4}, dataWidth = 16, largest_width = 4, frac_bits = 11)
+module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_of_layers-1] = '{784,20,10}, dataWidth = 16, largest_width = 4, frac_bits = 11)
 (
     input [dataWidth-1:0] in,
     
     input clk,
     input VSYNC,
     input HSYNC,
-    output reg [3:0] result,
-    output d_outs [number_of_layers-2:0],
-    output [dataWidth-1:0] feed_buses [number_of_layers - 2:0],
+    output reg [3:0] result
+    //output d_outs [number_of_layers-2:0],
+    //output [dataWidth-1:0] feed_buses [number_of_layers - 2:0],
     //output [2*dataWidth-1:0] mul_out [number_of_layers-2:0][9:0],
-    output [2*dataWidth-1:0] sum_out [number_of_layers-2:0][19:0],
-    output [dataWidth-1:0] weight_out [number_of_layers-2:0][19:0],
-    output freeze_out [number_of_layers-2:0],
-    output [array[0]*dataWidth-1:0] f_layer,
-    output [array[1]*dataWidth-1:0] stream_layer_store
+    //output [2*dataWidth-1:0] sum_out [number_of_layers-2:0][19:0],
+    //output [dataWidth-1:0] weight_out [number_of_layers-2:0][19:0],
+    //output freeze_out [number_of_layers-2:0],
+    //output [array[0]*dataWidth-1:0] f_layer,
+    //output [array[1]*dataWidth-1:0] stream_layer_store
     );
     
     genvar i;
@@ -49,9 +49,9 @@ module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_o
 
     
     
-    assign feed_buses = feeder_buses;
-    assign freeze_out = freeze;
-    assign d_outs = done_outs;
+    //assign feed_buses = feeder_buses;
+    //assign freeze_out = freeze;
+    //assign d_outs = done_outs;
     assign stream_layer_store = out_bus_layer[0].out_bus;
             //generate arrays with different widths
             
@@ -80,10 +80,10 @@ module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_o
                 .freeze(freeze[i-1]),
                 .pause(pause),
                  .myinput(feeder_buses[i-1]), 
-                 .out(stream_layer), 
+                 .out(stream_layer) 
                  //.mul_out(mul_out[i-1]),
-                 .sum_out(sum_out[i-1]), 
-                 .weight_out(weight_out[i-1])
+                 //.sum_out(sum_out[i-1]), 
+                 //.weight_out(weight_out[i-1])
                 );
                 
                 store_stream_layer #(.dataWidth(dataWidth), .neuron_no(array[1])) store (                    
@@ -107,10 +107,10 @@ module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_o
                 .clk(clk), 
                 .freeze(freeze[i-1]),
                  .myinput(feeder_buses[i-1]), 
-                 .out(out_bus_layer[i-1].out_bus), 
+                 .out(out_bus_layer[i-1].out_bus) 
                  //.mul_out(mul_out[i-1]),
-                 .sum_out(sum_out[i-1]), 
-                 .weight_out(weight_out[i-1])
+                 //.sum_out(sum_out[i-1]), 
+                 //.weight_out(weight_out[i-1])
                 );            
             
 
@@ -131,10 +131,10 @@ module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_o
         
         final_neuron_layer #(.layerNo(number_of_layers-2), .numWeight(array[number_of_layers-2]), .neuron_number(array[number_of_layers-1]), .dataWidth(dataWidth)) layer
         (
-        .clk(clk), .freeze(freeze[number_of_layers-2]), .myinput(feeder_buses[number_of_layers-2]), .out(unquantized_out),
+        .clk(clk), .freeze(freeze[number_of_layers-2]), .myinput(feeder_buses[number_of_layers-2]), .out(unquantized_out)
          //.mul_out(mul_out[number_of_layers-2]),
-         .sum_out(sum_out[number_of_layers-2]),
-          .weight_out(weight_out[number_of_layers-2])
+         //.sum_out(sum_out[number_of_layers-2]),
+          //.weight_out(weight_out[number_of_layers-2])
         );         
         
         output_layer #(.weightNo(array[number_of_layers-1]), .dataWidth(dataWidth)) ll

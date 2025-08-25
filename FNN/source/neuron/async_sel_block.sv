@@ -29,7 +29,7 @@ output reg freeze_r,
 output [data_width-1:0] data_out
     );
     
-    parameter addressWidth = $clog2(weight_n);
+    localparam addressWidth = $clog2(weight_n);
     
     reg [1:0] state = 0; //0 = start, 1 = freeze, 2 = multiply
     reg [addressWidth-1:0] address = 0;

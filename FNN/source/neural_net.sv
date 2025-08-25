@@ -102,10 +102,10 @@ module neural_net #(parameter number_of_layers = 3, int array [0:number_of_layer
         
         final_neuron_layer #(.layerNo(number_of_layers-2), .numWeight(array[number_of_layers-2]), .neuron_number(array[number_of_layers-1]), .dataWidth(dataWidth)) layer
         (
-        .clk(clk), .freeze(freeze[number_of_layers-2]), .myinput(feeder_buses[number_of_layers-2]), .out(unquantized_out),
+        .clk(clk), .freeze(freeze[number_of_layers-2]), .myinput(feeder_buses[number_of_layers-2]), .out(unquantized_out)
          //.mul_out(mul_out[number_of_layers-2]),
-         .sum_out(sum_out[number_of_layers-2]),
-          .weight_out(weight_out[number_of_layers-2])
+         //.sum_out(sum_out[number_of_layers-2])
+          //.weight_out(weight_out[number_of_layers-2])
         );         
         
         output_layer #(.weightNo(array[number_of_layers-1]), .dataWidth(dataWidth)) ll
