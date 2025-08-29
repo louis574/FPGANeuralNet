@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_of_layers-1] = '{784,20,10}, dataWidth = 16, largest_width = 4, frac_bits = 11)
+module stream_neural_net #(parameter number_of_layers = 5, int array [0:number_of_layers-1] = '{4096,30,30,30,2}, dataWidth = 12, largest_width = 4, frac_bits = 9)
 (
     input [dataWidth-1:0] in,
     
@@ -52,7 +52,7 @@ module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_o
     //assign feed_buses = feeder_buses;
     //assign freeze_out = freeze;
     //assign d_outs = done_outs;
-    assign stream_layer_store = out_bus_layer[0].out_bus;
+    //assign stream_layer_store = out_bus_layer[0].out_bus;
             //generate arrays with different widths
             
             
@@ -66,7 +66,7 @@ module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_o
     generate
         for( i = 0; i < number_of_layers-1; i = i + 1) begin : layers
             if(i == 0) begin
-                pixel_stream_block stream 
+                pixel_stream_block #(.data_width(dataWidth)) stream 
                 (
                 .HSYNC(HSYNC), .VSYNC(VSYNC), .clk(clk), .data_in(in),
                 .done_out(done_outs[i]), .freeze_r(freeze[i]), .pause_r(pause),

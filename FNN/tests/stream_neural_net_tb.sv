@@ -21,9 +21,10 @@
 
 
 module stream_neural_net_tb;
-    localparam no_of_layers = 4; 
-    localparam int layer_array [0:no_of_layers-1] = '{784,20,10,10};
-    localparam dWidth = 16;
+    localparam no_of_layers = 5; 
+    localparam int layer_array [0:no_of_layers-1] = '{4096,30,30,30,2};
+    localparam dWidth = 12;
+    localparam frac_width = 9;
     
     //reg [12543:0] in_x [0:0]; //[0:0];
     reg [layer_array[0]*dWidth-1:0] in_x [9:0];
@@ -52,10 +53,10 @@ module stream_neural_net_tb;
 
 
     initial begin
-        $readmemb("Batch_4_vals.mif", in_x);
+        $readmemb("0_Batch_4_vals.mif", in_x);
     end
    
-    stream_neural_net #( .number_of_layers(no_of_layers), .array(layer_array), .dataWidth(dWidth), .frac_bits(11)) test
+    stream_neural_net #( .number_of_layers(no_of_layers), .array(layer_array), .dataWidth(dWidth), .frac_bits(frac_width)) test
     (
     .in(in),
     //.stream_layer_store(stream_layer_store),
@@ -76,29 +77,44 @@ module stream_neural_net_tb;
         forever #5 clk = ~clk;
     end
     
-    initial begin        
+    initial begin
+    
+        for(int e = 0; e < 10; e=e+1) begin        
 
 
+                VSYNC=1;
+                example=e;
+                #30;
+ 
             
-            for (int e = 0; e < 10; e=e+1) begin
-            VSYNC=1;
-            #50;  
-            example = e;  
-            
-                for (int l = 0; l < 28; l = l+1) begin
+                for (int l = 0; l < 64; l = l+1) begin
                     HSYNC = 1;
-                    for(int x = 0; x < 28; x= x+1) begin
-                        i = x+l*28;
+                    for(int x = 0; x < 64; x= x+1) begin
+                        i = x+l*64;
                         #10;
                     end
                     //
                     HSYNC=0;
                     #40;
                 end
+                
                 VSYNC=0;
-                #30;
-            
+                #10;
+                
             end
+                
+                
+                
+                
+                
+                #100000;
+                
+                
+                
+                
+                
+ 
+
         
 
         
