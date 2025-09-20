@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module stream_neural_net #(parameter number_of_layers = 5, int array [0:number_of_layers-1] = '{4096,30,30,30,2}, dataWidth = 12, largest_width = 4, frac_bits = 9)
+module stream_neural_net #(parameter number_of_layers = 3, int array [0:number_of_layers-1] = '{784,20,10}, dataWidth = 8, largest_width = 4, frac_bits = 7)
 (
     input [dataWidth-1:0] in,
     
@@ -46,6 +46,7 @@ module stream_neural_net #(parameter number_of_layers = 5, int array [0:number_o
     wire [2*dataWidth*array[number_of_layers-1]-1:0] unquantized_out;
     wire pause;
     wire [dataWidth*array[1]-1:0] stream_layer;
+    wire b_clk;
 
     
     
@@ -55,7 +56,12 @@ module stream_neural_net #(parameter number_of_layers = 5, int array [0:number_o
     //assign stream_layer_store = out_bus_layer[0].out_bus;
             //generate arrays with different widths
             
-            
+    BUFG bufg_inst (
+    .I(clk),
+    .O(b_clk)
+    ); 
+    
+             
     generate
         for(x = 0; x < number_of_layers-2; x = x+1) begin : out_bus_layer
             wire [dataWidth*array[x+1]-1:0] out_bus;
@@ -68,7 +74,7 @@ module stream_neural_net #(parameter number_of_layers = 5, int array [0:number_o
             if(i == 0) begin
                 pixel_stream_block #(.data_width(dataWidth)) stream 
                 (
-                .HSYNC(HSYNC), .VSYNC(VSYNC), .clk(clk), .data_in(in),
+                .HSYNC(HSYNC), .VSYNC(VSYNC), .clk(b_clk), .data_in(in),
                 .done_out(done_outs[i]), .freeze_r(freeze[i]), .pause_r(pause),
                 .data_out(feeder_buses[i]) //add remaining block then add stream layer in correctly
                 );  
@@ -76,7 +82,7 @@ module stream_neural_net #(parameter number_of_layers = 5, int array [0:number_o
             else if(i==1) begin
                 stream_layer #(.layerNo(i-1), .numWeight(array[i-1]), .neuron_number(array[i]), .dataWidth(dataWidth), .frac_bits(frac_bits)) layer
                 (
-                .clk(clk), 
+                .clk(b_clk), 
                 .freeze(freeze[i-1]),
                 .pause(pause),
                  .myinput(feeder_buses[i-1]), 
@@ -87,7 +93,7 @@ module stream_neural_net #(parameter number_of_layers = 5, int array [0:number_o
                 );
                 
                 store_stream_layer #(.dataWidth(dataWidth), .neuron_no(array[1])) store (                    
-                .clk(clk),
+                .clk(b_clk),
                 .done(done_outs[i-1]),
                 .in(stream_layer),
                 .out(out_bus_layer[i-1].out_bus)                
@@ -95,7 +101,7 @@ module stream_neural_net #(parameter number_of_layers = 5, int array [0:number_o
                 
                 async_sel_block #( .weight_n(array[i]), .data_width(dataWidth)) sel 
                 (
-                .done_in(done_outs[i-1]), .clk(clk), .data_in(out_bus_layer[i-1].out_bus),
+                .done_in(done_outs[i-1]), .clk(b_clk), .data_in(out_bus_layer[i-1].out_bus),
                 .done_out(done_outs[i]), .freeze_r(freeze[i]),
                 .data_out(feeder_buses[i])        
                 );
@@ -104,7 +110,7 @@ module stream_neural_net #(parameter number_of_layers = 5, int array [0:number_o
             else begin
                 layer #(.layerNo(i-1), .numWeight(array[i-1]), .neuron_number(array[i]), .dataWidth(dataWidth), .frac_bits(frac_bits)) layer
                 (
-                .clk(clk), 
+                .clk(b_clk), 
                 .freeze(freeze[i-1]),
                  .myinput(feeder_buses[i-1]), 
                  .out(out_bus_layer[i-1].out_bus) 
@@ -116,7 +122,7 @@ module stream_neural_net #(parameter number_of_layers = 5, int array [0:number_o
 
                 async_sel_block #( .weight_n(array[i]), .data_width(dataWidth)) sel 
                 (
-                .done_in(done_outs[i-1]), .clk(clk), .data_in(out_bus_layer[i-1].out_bus),
+                .done_in(done_outs[i-1]), .clk(b_clk), .data_in(out_bus_layer[i-1].out_bus),
                 .done_out(done_outs[i]), .freeze_r(freeze[i]),
                 .data_out(feeder_buses[i])        
                 );
@@ -131,14 +137,14 @@ module stream_neural_net #(parameter number_of_layers = 5, int array [0:number_o
         
         final_neuron_layer #(.layerNo(number_of_layers-2), .numWeight(array[number_of_layers-2]), .neuron_number(array[number_of_layers-1]), .dataWidth(dataWidth)) layer
         (
-        .clk(clk), .freeze(freeze[number_of_layers-2]), .myinput(feeder_buses[number_of_layers-2]), .out(unquantized_out)
+        .clk(b_clk), .freeze(freeze[number_of_layers-2]), .myinput(feeder_buses[number_of_layers-2]), .out(unquantized_out)
          //.mul_out(mul_out[number_of_layers-2]),
          //.sum_out(sum_out[number_of_layers-2]),
           //.weight_out(weight_out[number_of_layers-2])
         );         
         
         output_layer #(.weightNo(array[number_of_layers-1]), .dataWidth(dataWidth)) ll
-        (.clk(clk), .done_in(done_outs[number_of_layers-2]), .in(unquantized_out), .out(result)
+        (.clk(b_clk), .done_in(done_outs[number_of_layers-2]), .in(unquantized_out), .out(result)
         );
     endgenerate
 endmodule

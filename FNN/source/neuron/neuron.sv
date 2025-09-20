@@ -23,15 +23,15 @@ module neuron #(parameter layerNo=0,neuronNo=0,numWeight=784,dataWidth=16,sigmoi
     input           clk,
     input           freeze,
     input [dataWidth-1:0]    myinput,
-    output[dataWidth-1:0]    out_n,
+    output[dataWidth-1:0]    out_n
     //for testing:
     
     //output state_out,
     //output reset_out, 
-    output [2*dataWidth-1:0] sum_out,
+    //output [2*dataWidth-1:0] sum_out,
     //output [2*dataWidth-1:0] mul_out,
     //output [2*dataWidth-1:0] combo_out,
-    output [dataWidth-1:0] weight_out 
+    //output [dataWidth-1:0] weight_out 
     );
     
     localparam addressWidth = $clog2(numWeight);
@@ -53,12 +53,19 @@ module neuron #(parameter layerNo=0,neuronNo=0,numWeight=784,dataWidth=16,sigmoi
     reg state = 0; //0 = frozen, 1 = unfrozen 
     
 
-    assign sum_out = sum;
-    assign weight_out = w_out;
+    //assign sum_out = sum;
+    //assign weight_out = w_out;
     //assign mul_out = mul;
     //assign combo_out = comboAdd;
 
-	assign mul = $signed(myinput) * $signed(w_out);
+	//assign mul = $signed(myinput) * $signed(w_out);
+	mult_gen_0 m(
+    .A(myinput),
+    .B(w_out),
+    .P (mul)      
+    );
+	
+	
     assign comboAdd = mul + sum;
     assign BiasAdd = bias + comboAdd;
     //assign r_addr_next = r_addr+1;

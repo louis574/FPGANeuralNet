@@ -58,7 +58,16 @@ module neuron_no_ReLU #(parameter layerNo=0,neuronNo=0,numWeight=784,dataWidth=1
     assign out_n = sum;
     assign combo_out = comboAdd;
 
-	assign mul = $signed(myinput) * $signed(w_out);
+	
+	
+	//assign mul = $signed(myinput) * $signed(w_out);
+    
+    mult_gen_0 m(
+    .A(myinput),
+    .B(w_out),
+    .P (mul)      
+    );
+    
     assign comboAdd = mul + sum;
     assign BiasAdd = bias + comboAdd;
     //assign sum_next = (r_addr == numWeight-1) ? BiasAdd :
